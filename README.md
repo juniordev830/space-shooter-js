@@ -4,7 +4,7 @@ Protótipo de jogo em navegador usando HTML5 Canvas e JavaScript puro.
 
 ## Estado atual
 
-A implementação atual desenha a nave do jogador e uma pontuação inicial em um canvas. Ainda é uma base inicial de jogo: mecânicas completas de tiro, inimigos, colisões e progressão precisam ser implementadas antes de serem anunciadas como recursos disponíveis.
+O jogo inclui movimento lateral, disparos com intervalo, inimigos, colisões, pontuação, três vidas e reinício após game over. A dificuldade aumenta gradualmente conforme a pontuação.
 
 ## Executar
 
@@ -19,7 +19,8 @@ Acesse `http://localhost:8000`.
 ## Arquivos
 
 - `index.html`: estrutura da página e canvas.
-- `game.js`: estado e renderização básica do jogador.
+- `game.js`: lógica do jogo, controles, atualização e renderização.
+- `game.test.js`: testes automatizados da lógica usando o test runner nativo do Node.js.
 
 ## Tecnologias
 
@@ -34,4 +35,12 @@ Acesse `http://localhost:8000`.
 - Separar atualização do estado e renderização.
 - Adicionar testes para a lógica independente do canvas.
 
-Projeto experimental em desenvolvimento.
+## Testes
+
+Com Node.js 20 ou superior, execute:
+
+```bash
+node --test game.test.js
+```
+
+Projeto experimental em evolução.

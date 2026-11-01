@@ -1,16 +1,37 @@
 # Space Shooter JS
 
-An HTML5 Canvas Space Shooter arcade game written in JavaScript.
+Protótipo de jogo em navegador usando HTML5 Canvas e JavaScript puro.
 
-## 🚀 Features
+## Estado atual
 
-- **60 FPS Canvas Game Loop**: Smooth animation rendering.
-- **Player Controls**: Keyboard arrow keys and spacebar shooting.
-- **Enemy Spawning & Collision**: Particle effects and score multiplier.
+A implementação atual desenha a nave do jogador e uma pontuação inicial em um canvas. Ainda é uma base inicial de jogo: mecânicas completas de tiro, inimigos, colisões e progressão precisam ser implementadas antes de serem anunciadas como recursos disponíveis.
 
-## 🎮 How to Play
+## Executar
 
-Open `index.html` in any web browser!
+Abra `index.html` em um navegador moderno. Para desenvolvimento, também é possível usar um servidor HTTP local:
 
-## 📜 License
-MIT
+```bash
+python -m http.server 8000
+```
+
+Acesse `http://localhost:8000`.
+
+## Arquivos
+
+- `index.html`: estrutura da página e canvas.
+- `game.js`: estado e renderização básica do jogador.
+
+## Tecnologias
+
+- HTML5 Canvas
+- JavaScript
+- APIs do navegador
+
+## Próximas melhorias
+
+- Adicionar controles de movimento e disparo.
+- Implementar inimigos, colisões, vidas e condição de fim de jogo.
+- Separar atualização do estado e renderização.
+- Adicionar testes para a lógica independente do canvas.
+
+Projeto experimental em desenvolvimento.

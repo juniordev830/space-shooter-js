@@ -16,6 +16,8 @@ python -m http.server 8000
 
 Acesse `http://localhost:8000`.
 
+> **Acesso pela internet:** o comando acima disponibiliza o jogo apenas na sua máquina/rede local; ele não publica o projeto na internet. Para acesso público, é necessário hospedá-lo em um serviço de páginas estáticas, como GitHub Pages, e configurar a publicação.
+
 ## Arquivos
 
 - `index.html`: estrutura da página e canvas.
@@ -30,10 +32,9 @@ Acesse `http://localhost:8000`.
 
 ## Próximas melhorias
 
-- Adicionar controles de movimento e disparo.
-- Implementar inimigos, colisões, vidas e condição de fim de jogo.
 - Separar atualização do estado e renderização.
-- Adicionar testes para a lógica independente do canvas.
+- Ampliar os testes da lógica independente do canvas.
+- Melhorar acessibilidade e controles em telas sensíveis ao toque.
 
 ## Testes
 

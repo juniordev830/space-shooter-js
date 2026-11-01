@@ -18,7 +18,7 @@ test("shooting creates a bullet and respects cooldown", () => {
   game.update(16, { shoot: true });
   game.update(16, { shoot: true });
   assert.equal(game.bullets.length, 1);
-  game.update(250, { shoot: true });
+  for (let i = 0; i < 5; i++) game.update(50, { shoot: true });
   assert.equal(game.bullets.length, 2);
 });
 

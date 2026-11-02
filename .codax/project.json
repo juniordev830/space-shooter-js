@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "project_kind": "Jogo espacial JavaScript",
+  "entry_points": [
+    "game.js",
+    "game.test.js"
+  ],
+  "test_commands": [
+    "node --check game.js",
+    "node --test game.test.js"
+  ],
+  "review_focus": [
+    "Colisão de projéteis, vidas e reinício",
+    "Controle do delta de tempo e desempenho"
+  ]
+}

@@ -157,6 +157,18 @@
     }
   }
 
+  function attachPointerControl(button, activePointers) {
+    if (!button) return;
+    button.addEventListener("pointerdown", event => {
+      event.preventDefault();
+      activePointers.add(event.pointerId);
+      button.setPointerCapture(event.pointerId);
+    });
+    for (const name of ["pointerup", "pointercancel", "lostpointercapture"]) {
+      button.addEventListener(name, event => activePointers.delete(event.pointerId));
+    }
+  }
+
   function startBrowserGame() {
     if (typeof document === "undefined") return;
     const canvas = document.getElementById("gameCanvas");
@@ -165,13 +177,22 @@
 
     const engine = new GameEngine({ width: canvas.width, height: canvas.height });
     const keys = new Set();
+    const pointers = { left: new Set(), right: new Set(), shoot: new Set() };
+    for (const name of Object.keys(pointers)) {
+      attachPointerControl(document.getElementById(`control-${name}`), pointers[name]);
+    }
+    const restart = document.getElementById("control-restart");
+    if (restart) restart.addEventListener("click", () => engine.reset());
     window.addEventListener("keydown", event => {
       if (["ArrowLeft", "ArrowRight", " "].includes(event.key)) event.preventDefault();
       keys.add(event.key);
       if (event.key.toLowerCase() === "r" && engine.gameOver) engine.reset();
     });
     window.addEventListener("keyup", event => keys.delete(event.key));
-    window.addEventListener("blur", () => keys.clear());
+    window.addEventListener("blur", () => {
+      keys.clear();
+      for (const active of Object.values(pointers)) active.clear();
+    });
 
     let previous = 0;
     function frame(timestamp) {
@@ -179,9 +200,9 @@
       const delta = timestamp - previous;
       previous = timestamp;
       engine.update(delta, {
-        left: keys.has("ArrowLeft") || keys.has("a") || keys.has("A"),
-        right: keys.has("ArrowRight") || keys.has("d") || keys.has("D"),
-        shoot: keys.has(" ")
+        left: keys.has("ArrowLeft") || keys.has("a") || keys.has("A") || pointers.left.size > 0,
+        right: keys.has("ArrowRight") || keys.has("d") || keys.has("D") || pointers.right.size > 0,
+        shoot: keys.has(" ") || pointers.shoot.size > 0
       });
       drawGame(ctx, engine);
       window.requestAnimationFrame(frame);
@@ -190,7 +211,7 @@
   }
 
   if (typeof module !== "undefined" && module.exports) {
-    module.exports = { Player, GameEngine, intersects };
+    module.exports = { Player, GameEngine, intersects, attachPointerControl };
   }
   if (typeof window !== "undefined") startBrowserGame();
 })(typeof globalThis !== "undefined" ? globalThis : this);

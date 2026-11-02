@@ -6,6 +6,8 @@ Protótipo de jogo em navegador usando HTML5 Canvas e JavaScript puro.
 
 O jogo inclui movimento lateral, disparos com intervalo, inimigos, colisões, pontuação, três vidas e reinício após game over. A dificuldade aumenta gradualmente conforme a pontuação.
 
+Em celulares e tablets, mantenha pressionados os botões de movimento e de disparo na tela. O botão Reiniciar começa uma nova partida. No computador, os controles por teclado continuam disponíveis.
+
 ## Executar
 
 Abra `index.html` em um navegador moderno. Para desenvolvimento, também é possível usar um servidor HTTP local:
@@ -34,7 +36,7 @@ Acesse `http://localhost:8000`.
 
 - Separar atualização do estado e renderização.
 - Ampliar os testes da lógica independente do canvas.
-- Melhorar acessibilidade e controles em telas sensíveis ao toque.
+- Melhorar a acessibilidade e adicionar feedback sonoro opcional.
 
 ## Testes
 

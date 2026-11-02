@@ -86,13 +86,24 @@
         }
       }
 
+      // An enemy that reaches the player causes damage immediately and is
+      // removed, so it cannot repeatedly drain lives on subsequent frames.
       for (let i = this.enemies.length - 1; i >= 0; i--) {
-        if (this.enemies[i].y > this.height) {
+        const enemy = this.enemies[i];
+        if (intersects(enemy, this.player)) {
+          this.enemies.splice(i, 1);
+          this.lives -= 1;
+          continue;
+        }
+        if (enemy.y > this.height) {
           this.enemies.splice(i, 1);
           this.lives -= 1;
         }
       }
-      if (this.lives <= 0) this.gameOver = true;
+      if (this.lives <= 0) {
+        this.lives = 0;
+        this.gameOver = true;
+      }
     }
   }
 

@@ -52,3 +52,39 @@ test("rectangle collision helper detects overlap only", () => {
   assert.equal(intersects({ x: 0, y: 0, width: 10, height: 10 }, { x: 9, y: 9, width: 10, height: 10 }), true);
   assert.equal(intersects({ x: 0, y: 0, width: 10, height: 10 }, { x: 10, y: 10, width: 10, height: 10 }), false);
 });
+
+test("enemy collision with player removes enemy and costs one life only", () => {
+  const game = new GameEngine({ random: () => 0.5 });
+  game.enemies.push({
+    x: game.player.x + 5,
+    y: game.player.y + 5,
+    width: 30,
+    height: 22,
+    speed: 0
+  });
+
+  game.update(16);
+  assert.equal(game.lives, 2);
+  assert.equal(game.enemies.length, 0);
+
+  game.update(16);
+  assert.equal(game.lives, 2);
+});
+
+test("player collision ends game at zero lives", () => {
+  const game = new GameEngine({ random: () => 0.5 });
+  game.lives = 1;
+  game.enemies.push({
+    x: game.player.x,
+    y: game.player.y,
+    width: 30,
+    height: 22,
+    speed: 0
+  });
+
+  game.update(16);
+  assert.equal(game.lives, 0);
+  assert.equal(game.gameOver, true);
+  game.update(16);
+  assert.equal(game.lives, 0);
+});

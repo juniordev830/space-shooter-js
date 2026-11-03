@@ -31,13 +31,23 @@
       this.score = 0;
       this.lives = 3;
       this.gameOver = false;
+      this.paused = false;
       this.elapsed = 0;
       this.spawnElapsed = 0;
       this.fireCooldown = 0;
     }
 
+    setPaused(paused) {
+      this.paused = Boolean(paused);
+    }
+
+    togglePaused() {
+      this.paused = !this.paused;
+      return this.paused;
+    }
+
     update(deltaMs, input = {}) {
-      if (this.gameOver) return;
+      if (this.gameOver || this.paused) return;
       const delta = Math.max(0, Math.min(Number(deltaMs) || 0, 50)) / 1000;
       this.elapsed += delta * 1000;
       this.spawnElapsed += delta * 1000;
@@ -187,6 +197,7 @@
       if (["ArrowLeft", "ArrowRight", " "].includes(event.key)) event.preventDefault();
       keys.add(event.key);
       if (event.key.toLowerCase() === "r" && engine.gameOver) engine.reset();
+      if (event.key.toLowerCase() === "p") engine.togglePaused();
     });
     window.addEventListener("keyup", event => keys.delete(event.key));
     window.addEventListener("blur", () => {

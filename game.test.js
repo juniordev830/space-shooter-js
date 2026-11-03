@@ -66,6 +66,21 @@ test("player stays within the canvas bounds", () => {
   assert.equal(game.player.x, 560);
 });
 
+test("pause freezes simulation until resumed", () => {
+  const game = new GameEngine({ random: () => 0.5 });
+  const initialX = game.player.x;
+  game.setPaused(true);
+  game.update(1000, { right: true, shoot: true });
+  assert.equal(game.player.x, initialX);
+  assert.equal(game.bullets.length, 0);
+  assert.equal(game.paused, true);
+
+  game.togglePaused();
+  game.update(16, { right: true });
+  assert.ok(game.player.x > initialX);
+  assert.equal(game.paused, false);
+});
+
 test("shooting creates a bullet and respects cooldown", () => {
   const game = new GameEngine({ random: () => 0.5 });
   game.update(16, { shoot: true });

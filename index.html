@@ -1,17 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Space Shooter JS Arcade</title>
     <style>
         body { margin: 0; background: #0b0d17; color: white; text-align: center; font-family: sans-serif; }
-        canvas { border: 2px solid #3b82f6; background: #000; margin-top: 20px; }
+        canvas { box-sizing: border-box; width: min(600px, 100%); height: auto; border: 2px solid #3b82f6; background: #000; margin-top: 20px; }
+        .controls { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin: 16px auto; }
+        .controls button { min-width: 72px; min-height: 48px; padding: 10px; font-size: 1rem; touch-action: none; }
     </style>
 </head>
 <body>
     <h1>🚀 Space Shooter Arcade</h1>
-    <p>Use ←/→ ou A/D para mover e Espaço para atirar. Você tem 3 vidas; pressione R após perder.</p>
+    <p>Use ←/→ ou A/D para mover e Espaço para atirar. No celular ou tablet, use os botões abaixo.</p>
     <canvas id="gameCanvas" width="600" height="400"></canvas>
+    <div class="controls" aria-label="Controles do jogo">
+        <button id="control-left" type="button" aria-label="Mover para a esquerda">←</button>
+        <button id="control-right" type="button" aria-label="Mover para a direita">→</button>
+        <button id="control-shoot" type="button">Atirar</button>
+        <button id="control-restart" type="button">Reiniciar</button>
+    </div>
     <script src="game.js"></script>
 </body>
 </html>

@@ -1,6 +1,59 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { GameEngine, intersects } = require("./game.js");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const path = require("node:path");
+const { GameEngine, intersects, attachPointerControl } = require("./game.js");
+
+test("pointer controls handle simultaneous touches and cancellation", () => {
+  const handlers = {};
+  const captured = [];
+  const button = {
+    addEventListener(name, callback) { handlers[name] = callback; },
+    setPointerCapture(id) { captured.push(id); }
+  };
+  const active = new Set();
+  attachPointerControl(button, active);
+  handlers.pointerdown({ pointerId: 1, preventDefault() {} });
+  handlers.pointerdown({ pointerId: 2, preventDefault() {} });
+  assert.deepEqual(captured, [1, 2]);
+  handlers.pointerup({ pointerId: 1 });
+  assert.equal(active.has(2), true);
+  handlers.pointercancel({ pointerId: 2 });
+  assert.equal(active.size, 0);
+  attachPointerControl(null, active);
+});
+
+test("browser entry point connects the on-screen controls to the game", () => {
+  const positions = [];
+  const context = {
+    clearRect() {}, fillRect() {}, beginPath() {}, closePath() {}, fill() {}, lineTo() {}, fillText() {},
+    moveTo(x) { positions.push(x); }
+  };
+  const buttons = {};
+  for (const name of ["left", "right", "shoot", "restart"]) {
+    buttons[`control-${name}`] = {
+      handlers: {},
+      addEventListener(event, callback) { this.handlers[event] = callback; },
+      setPointerCapture() {}
+    };
+  }
+  const canvas = { width: 600, height: 400, getContext: () => context };
+  const document = { getElementById: id => id === "gameCanvas" ? canvas : buttons[id] };
+  const frames = [];
+  const window = { addEventListener() {}, requestAnimationFrame: callback => frames.push(callback) };
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, "game.js"), "utf8"), { window, document });
+  frames.shift()(1000);
+  buttons["control-left"].handlers.pointerdown({ pointerId: 1, preventDefault() {} });
+  frames.shift()(1050);
+  assert.ok(positions[1] < positions[0]);
+  buttons["control-left"].handlers.pointerup({ pointerId: 1 });
+  frames.shift()(1100);
+  assert.equal(positions[2], positions[1]);
+  buttons["control-restart"].handlers.click();
+  frames.shift()(1150);
+  assert.equal(positions[3], positions[0]);
+});
 
 test("player stays within the canvas bounds", () => {
   const game = new GameEngine({ random: () => 0.5 });

@@ -129,7 +129,12 @@
     ctx.fillStyle = "#0b1020";
     ctx.fillRect(0, 0, engine.width, engine.height);
 
-    ctx.fillStyle = "#60a5fa";
+    // Fixed star field keeps the horizon readable without new animation state.
+    ctx.fillStyle = "#677f9a";
+    for (let i = 0; i < 56; i++) {
+      ctx.fillRect((i * 193 + 13) % engine.width, (i * i * 19 + 31) % engine.height, 1.5, 1.5);
+    }
+    ctx.fillStyle = "#78e3df";
     ctx.beginPath();
     ctx.moveTo(engine.player.x + engine.player.width / 2, engine.player.y - 8);
     ctx.lineTo(engine.player.x, engine.player.y + engine.player.height);
@@ -151,8 +156,8 @@
 
     ctx.fillStyle = "#ffffff";
     ctx.font = "16px sans-serif";
-    ctx.fillText("Score: " + engine.score, 12, 22);
-    ctx.fillText("Lives: " + engine.lives, engine.width - 82, 22);
+    ctx.fillText("Pontos: " + engine.score, 12, 22);
+    ctx.fillText("Vidas: " + engine.lives, engine.width - 82, 22);
 
     if (engine.gameOver) {
       ctx.fillStyle = "rgba(0, 0, 0, 0.72)";

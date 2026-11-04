@@ -5,15 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Space Shooter JS Arcade</title>
     <style>
-        body { margin: 0; background: #0b0d17; color: white; text-align: center; font-family: sans-serif; }
-        canvas { box-sizing: border-box; width: min(600px, 100%); height: auto; border: 2px solid #3b82f6; background: #000; margin-top: 20px; }
-        .controls { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin: 16px auto; }
-        .controls button { min-width: 72px; min-height: 48px; padding: 10px; font-size: 1rem; touch-action: none; }
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; padding: clamp(16px, 4vw, 48px); background: radial-gradient(ellipse at top, #1c3454, #070d1c 75%); color: #eef5ff; font: 1rem/1.5 system-ui, sans-serif; }
+        main { width: min(100%, 640px); margin: auto; }
+        header { border-left: 3px solid #57ddd3; padding-left: 16px; }
+        header small { color: #83e8de; letter-spacing: .14em; font-weight: 700; }
+        h1 { margin: 2px 0; font-size: clamp(1.8rem, 5vw, 3rem); line-height: 1.12; }
+        p { margin: 8px 0 0; color: #c2d3e5; }
+        canvas { display: block; width: 100%; height: auto; margin-top: 20px; border: 1px solid #537491; border-radius: 12px; background: #0b1020; }
+        .controls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+        .controls button { min-height: 48px; border: 1px solid #587893; border-radius: 8px; background: #182a41; color: #f1f6ff; font: inherit; font-weight: 650; touch-action: none; }
+        #control-shoot { background: #86e9d8; color: #102b31; }
+        .controls button:active { transform: translateY(2px); }
+        .controls button:focus-visible { outline: 3px solid #f5d783; outline-offset: 2px; }
+        @media (max-width: 360px) { .controls { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
-    <h1>🚀 Space Shooter Arcade</h1>
-    <p>Use ←/→ ou A/D para mover e Espaço para atirar. No celular ou tablet, use os botões abaixo.</p>
+    <main>
+    <header><small>ARCADE ESPACIAL</small><h1>Space Shooter</h1>
+    <p>Use ←/→ ou A/D para mover e Espaço para atirar. No celular ou tablet, use os botões abaixo.</p></header>
     <canvas id="gameCanvas" width="600" height="400"></canvas>
     <div class="controls" aria-label="Controles do jogo">
         <button id="control-left" type="button" aria-label="Mover para a esquerda">←</button>
@@ -21,6 +32,7 @@
         <button id="control-shoot" type="button">Atirar</button>
         <button id="control-restart" type="button">Reiniciar</button>
     </div>
+    </main>
     <script src="game.js"></script>
 </body>
 </html>

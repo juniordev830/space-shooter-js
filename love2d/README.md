@@ -10,7 +10,14 @@ Instale o framework [LÖVE2D](https://love2d.org/) 11.x e, na raiz do repositór
 love love2d
 ```
 
-Controles: setas ou A/D para mover, Espaço para atirar, P para pausar, R para reiniciar após o fim de jogo.
+Controles: setas ou A/D para mover, Espaço para atirar, **S para ativar escudo**, P para pausar, R para reiniciar após o fim de jogo.
+
+## Novas mecânicas
+
+- **Fases progressivas:** a cada 100 pontos o nível aumenta, acelerando surgimento e velocidade dos inimigos.
+- **Escudo temporário:** a tecla S ativa proteção contra contato direto com inimigos por 2 segundos. A partida começa com uma carga e concede outra por nível, até 3.
+- **Recorde local:** o melhor resultado fica salvo automaticamente por LÖVE no arquivo `recorde.txt` da pasta de dados do aplicativo, fora do repositório.
+- Inimigos que saem da tela continuam reduzindo vidas mesmo com escudo ativo.
 
 ## Testar sem interface gráfica
 
@@ -20,7 +27,7 @@ Instale Lua 5.4 e execute na raiz do repositório:
 lua5.4 love2d/test_engine.lua
 ```
 
-Os testes verificam movimento e limites, intervalo entre tiros, colisões, perda de vidas, reinício e pausa, sem precisar instalar LÖVE2D.
+Os testes verificam movimento e limites, intervalo entre tiros, colisões, perda de vidas, reinício, pausa, progressão, proteção temporária e recorde em memória, sem precisar instalar LÖVE2D.
 
 ## Estrutura
 

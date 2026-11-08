@@ -22,6 +22,8 @@ function Engine:reset()
   self.player = { x = 280, y = 358, w = 40, h = 24, speed = 280 }
   self.bullets = {}
   self.enemies = {}
+  self.pickups = {}
+  self.kills = 0
   self.score = 0
   self.combo = 0
   self.comboTime = 0
@@ -92,8 +94,16 @@ function Engine:update(dt, input)
     else
       for j = #self.enemies, 1, -1 do
         if overlaps(bullet, self.enemies[j]) then
-          table.remove(self.enemies, j)
+          local defeated = table.remove(self.enemies, j)
           table.remove(self.bullets, i)
+          self.kills = self.kills + 1
+          -- Drop a repair capsule every 5 kills. It falls toward the player.
+          if self.kills % 5 == 0 then
+            table.insert(self.pickups, {
+              x = defeated.x + defeated.w / 2 - 7,
+              y = defeated.y, w = 14, h = 14, speed = 115,
+            })
+          end
           -- Chain hits within three seconds for up to 5x points.
           self.combo = math.min(5, self.combo + 1)
           self.comboTime = 3.0
@@ -122,6 +132,19 @@ function Engine:update(dt, input)
       end
     end
   end
+  -- Repairs increase lives by one (maximum three). Uncollected capsules
+  -- disappear offscreen without penalizing the player.
+  for i = #self.pickups, 1, -1 do
+    local capsule = self.pickups[i]
+    capsule.y = capsule.y + capsule.speed * dt
+    if overlaps(capsule, p) then
+      self.lives = math.min(3, self.lives + 1)
+      table.remove(self.pickups, i)
+    elseif capsule.y > self.height then
+      table.remove(self.pickups, i)
+    end
+  end
+
   if self.lives <= 0 then
     self.lives = 0
     self.gameOver = true

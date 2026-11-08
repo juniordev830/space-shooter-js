@@ -23,6 +23,8 @@ function Engine:reset()
   self.bullets = {}
   self.enemies = {}
   self.score = 0
+  self.combo = 0
+  self.comboTime = 0
   self.level = 1
   self.lives = 3
   self.shieldCharges = 1
@@ -50,6 +52,8 @@ function Engine:update(dt, input)
   self.shieldTime = math.max(0, self.shieldTime - dt)
   self.spawnTime = self.spawnTime + dt
   self.fireCooldown = math.max(0, self.fireCooldown - dt)
+  self.comboTime = math.max(0, self.comboTime - dt)
+  if self.comboTime == 0 then self.combo = 0 end
 
   local direction = (input.right and 1 or 0) - (input.left and 1 or 0)
   local p = self.player
@@ -90,7 +94,10 @@ function Engine:update(dt, input)
         if overlaps(bullet, self.enemies[j]) then
           table.remove(self.enemies, j)
           table.remove(self.bullets, i)
-          self.score = self.score + 10
+          -- Chain hits within three seconds for up to 5x points.
+          self.combo = math.min(5, self.combo + 1)
+          self.comboTime = 3.0
+          self.score = self.score + 10 * self.combo
           self.bestScore = math.max(self.bestScore, self.score)
           local nextLevel = math.floor(self.score / 100) + 1
           if nextLevel > self.level then
@@ -110,6 +117,8 @@ function Engine:update(dt, input)
       -- A shield protects the ship from collisions, not missed enemies.
       if enemy.y > self.height or self.shieldTime <= 0 then
         self.lives = self.lives - 1
+        self.combo = 0
+        self.comboTime = 0
       end
     end
   end

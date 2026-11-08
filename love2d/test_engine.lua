@@ -115,4 +115,36 @@ assert(game.combo == 0, "a missed enemy breaks the streak")
 game:reset()
 assert(game.combo == 0 and game.comboTime == 0)
 
+-- Every fifth kill drops a repair capsule that restores one life.
+game = Engine.new(deterministic)
+game.lives = 2
+for n = 1, 5 do
+  local px = 50 + n * 75
+  table.insert(game.bullets, { x=px, y=100, w=4, h=12, speed=0 })
+  table.insert(game.enemies, { x=px-1, y=99, w=30, h=22, speed=0 })
+end
+game:update(0.016)
+assert(game.kills == 5 and #game.pickups == 1, "fifth kill must drop a repair")
+assert(game.lives == 2 and #game.enemies == 0)
+
+local capsule = game.pickups[1]
+capsule.x = game.player.x
+capsule.y = game.player.y
+capsule.speed = 0
+game:update(0.016)
+assert(game.lives == 3 and #game.pickups == 0, "collecting a repair should heal")
+
+-- Repairs cannot raise lives above 3 and must expire harmlessly.
+table.insert(game.pickups, {
+  x=game.player.x, y=game.player.y, w=14, h=14, speed=0,
+})
+game:update(0.016)
+assert(game.lives == 3 and #game.pickups == 0, "life cap must hold")
+table.insert(game.pickups, { x=0, y=401, w=14, h=14, speed=115 })
+game:update(0.016)
+assert(game.lives == 3 and #game.pickups == 0, "missed repairs are harmless")
+
+game:reset()
+assert(game.kills == 0 and #game.pickups == 0, "reset must clear drops")
+
 print("Lua game tests passed")

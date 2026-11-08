@@ -90,4 +90,29 @@ assert(game.bestScore == 200)
 assert(game.level == 1 and game.shieldCharges == 1 and game.shieldTime == 0)
 assert(game.lives == 3 and game.score == 0)
 
+-- Consecutive kills reward a growing combo; idle time resets it.
+game = Engine.new(deterministic)
+table.insert(game.bullets, { x=101, y=100, w=4, h=12, speed=0 })
+table.insert(game.bullets, { x=201, y=100, w=4, h=12, speed=0 })
+table.insert(game.enemies, { x=100, y=99, w=30, h=22, speed=0 })
+table.insert(game.enemies, { x=200, y=99, w=30, h=22, speed=0 })
+game:update(0.016)
+assert(game.score == 30 and game.combo == 2, "consecutive hits must score 10 + 20")
+assert(game.bestScore == 30)
+game.paused = true
+game:update(10)
+assert(game.combo == 2, "pause must not consume combo time")
+game.paused = false
+for _ = 1, 61 do game:update(0.05) end
+assert(game.combo == 0 and game.comboTime == 0, "combo must expire after three seconds")
+table.insert(game.bullets, { x=101, y=100, w=4, h=12, speed=0 })
+table.insert(game.enemies, { x=100, y=99, w=30, h=22, speed=0 })
+game:update(0.016)
+assert(game.score == 40 and game.combo == 1, "new streak starts at x1")
+table.insert(game.enemies, { x=0, y=401, w=30, h=22, speed=0 })
+game:update(0.016)
+assert(game.combo == 0, "a missed enemy breaks the streak")
+game:reset()
+assert(game.combo == 0 and game.comboTime == 0)
+
 print("Lua game tests passed")

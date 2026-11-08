@@ -15,6 +15,7 @@ Controles: setas ou A/D para mover, Espaço para atirar, **S para ativar escudo*
 ## Novas mecânicas
 
 - **Combos de pontuação:** destrua inimigos em sequência (até 3 segundos entre acertos) para ganhar de 1x a 5x pontos. Perder uma vida ou deixar o tempo acabar encerra o combo.
+- **Cápsulas de reparo:** a cada 5 inimigos eliminados surge uma cápsula verde. Pegue-a com a nave para recuperar uma vida (máximo de 3). Cápsulas perdidas não custam vidas.
 - **Fases progressivas:** a cada 100 pontos o nível aumenta, acelerando surgimento e velocidade dos inimigos.
 - **Escudo temporário:** a tecla S ativa proteção contra contato direto com inimigos por 2 segundos. A partida começa com uma carga e concede outra por nível, até 3.
 - **Recorde local:** o melhor resultado fica salvo automaticamente por LÖVE no arquivo `recorde.txt` da pasta de dados do aplicativo, fora do repositório.
@@ -28,7 +29,7 @@ Instale Lua 5.4 e execute na raiz do repositório:
 lua5.4 love2d/test_engine.lua
 ```
 
-Os testes verificam movimento e limites, intervalo entre tiros, colisões, perda de vidas, reinício, pausa, progressão, proteção temporária e recorde em memória, sem precisar instalar LÖVE2D.
+Os testes verificam movimento e limites, intervalo entre tiros, colisões, perda de vidas, reinício, pausa, progressão, proteção temporária, cápsulas de reparo e recorde em memória, sem precisar instalar LÖVE2D.
 
 ## Estrutura
 

@@ -50,12 +50,23 @@ function love.draw()
     love.graphics.rectangle("fill", e.x, e.y, e.w, e.h)
   end
 
+  -- Repair capsules fall from every fifth defeated enemy.
+  love.graphics.setColor(0.31, 0.88, 0.51)
+  for _, item in ipairs(game.pickups) do
+    love.graphics.rectangle("fill", item.x, item.y, item.w, item.h, 3, 3)
+    love.graphics.setColor(0.07, 0.2, 0.12)
+    love.graphics.rectangle("fill", item.x + 6, item.y + 2, 2, 10)
+    love.graphics.rectangle("fill", item.x + 2, item.y + 6, 10, 2)
+    love.graphics.setColor(0.31, 0.88, 0.51)
+  end
+
   love.graphics.setColor(1, 1, 1)
   love.graphics.print("Pontos: " .. game.score, 12, 12)
   love.graphics.print("Recorde: " .. game.bestScore, 130, 12)
   love.graphics.print("Nivel: " .. game.level, 282, 12)
   love.graphics.print("Vidas: " .. game.lives, 510, 12)
   love.graphics.print("Escudos: " .. game.shieldCharges, 12, 34)
+  love.graphics.print("Eliminados: " .. game.kills, 12, 56)
   if game.combo > 1 then
     love.graphics.setColor(1, 0.82, 0.22)
     love.graphics.print("Combo x" .. game.combo .. " (" .. string.format("%.1f", game.comboTime) .. "s)", 328, 34)

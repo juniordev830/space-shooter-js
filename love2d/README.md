@@ -14,6 +14,7 @@ Controles: setas ou A/D para mover, Espaço para atirar, **S para ativar escudo*
 
 ## Novas mecânicas
 
+- **Combos de pontuação:** destrua inimigos em sequência (até 3 segundos entre acertos) para ganhar de 1x a 5x pontos. Perder uma vida ou deixar o tempo acabar encerra o combo.
 - **Fases progressivas:** a cada 100 pontos o nível aumenta, acelerando surgimento e velocidade dos inimigos.
 - **Escudo temporário:** a tecla S ativa proteção contra contato direto com inimigos por 2 segundos. A partida começa com uma carga e concede outra por nível, até 3.
 - **Recorde local:** o melhor resultado fica salvo automaticamente por LÖVE no arquivo `recorde.txt` da pasta de dados do aplicativo, fora do repositório.

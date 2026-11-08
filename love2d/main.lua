@@ -56,6 +56,11 @@ function love.draw()
   love.graphics.print("Nivel: " .. game.level, 282, 12)
   love.graphics.print("Vidas: " .. game.lives, 510, 12)
   love.graphics.print("Escudos: " .. game.shieldCharges, 12, 34)
+  if game.combo > 1 then
+    love.graphics.setColor(1, 0.82, 0.22)
+    love.graphics.print("Combo x" .. game.combo .. " (" .. string.format("%.1f", game.comboTime) .. "s)", 328, 34)
+    love.graphics.setColor(1, 1, 1)
+  end
   if game.shieldTime > 0 then
     love.graphics.print(string.format("Protegido: %.1fs", game.shieldTime), 130, 34)
   end

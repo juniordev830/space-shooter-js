@@ -47,3 +47,7 @@ node --test game.test.js
 ```
 
 Projeto experimental em evolução.
+
+## Validação e manutenção
+
+Consulte o [guia técnico de validação](docs/GUIA_DE_VALIDACAO.md) antes de alterar o código: ele reúne os comandos, casos de regressão e limites atuais do projeto.

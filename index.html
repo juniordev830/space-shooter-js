@@ -13,12 +13,13 @@
 </head>
 <body>
     <h1>🚀 Space Shooter Arcade</h1>
-    <p>Use ←/→ ou A/D para mover e Espaço para atirar. No celular ou tablet, use os botões abaixo.</p>
+    <p>Use ←/→ ou A/D para mover e Espaço para atirar. Pressione P para pausar ou continuar. No celular ou tablet, use os botões abaixo.</p>
     <canvas id="gameCanvas" width="600" height="400"></canvas>
     <div class="controls" aria-label="Controles do jogo">
         <button id="control-left" type="button" aria-label="Mover para a esquerda">←</button>
         <button id="control-right" type="button" aria-label="Mover para a direita">→</button>
         <button id="control-shoot" type="button">Atirar</button>
+        <button id="control-pause" type="button" aria-pressed="false">Pausa</button>
         <button id="control-restart" type="button">Reiniciar</button>
     </div>
     <script src="game.js"></script>

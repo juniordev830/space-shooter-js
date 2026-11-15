@@ -24,24 +24,31 @@ test("pointer controls handle simultaneous touches and cancellation", () => {
   attachPointerControl(null, active);
 });
 
-test("browser entry point connects the on-screen controls to the game", () => {
+test("browser controls keep pause, keyboard and touch in sync", () => {
   const positions = [];
+  const messages = [];
   const context = {
-    clearRect() {}, fillRect() {}, beginPath() {}, closePath() {}, fill() {}, lineTo() {}, fillText() {},
+    clearRect() {}, fillRect() {}, beginPath() {}, closePath() {}, fill() {}, lineTo() {}, fillText(message) { messages.push(message); },
     moveTo(x) { positions.push(x); }
   };
   const buttons = {};
-  for (const name of ["left", "right", "shoot", "restart"]) {
+  for (const name of ["left", "right", "shoot", "pause", "restart"]) {
     buttons[`control-${name}`] = {
       handlers: {},
+      attributes: {},
       addEventListener(event, callback) { this.handlers[event] = callback; },
+      setAttribute(name, value) { this.attributes[name] = value; },
       setPointerCapture() {}
     };
   }
   const canvas = { width: 600, height: 400, getContext: () => context };
   const document = { getElementById: id => id === "gameCanvas" ? canvas : buttons[id] };
   const frames = [];
-  const window = { addEventListener() {}, requestAnimationFrame: callback => frames.push(callback) };
+  const handlers = {};
+  const window = {
+    addEventListener(name, callback) { handlers[name] = callback; },
+    requestAnimationFrame: callback => frames.push(callback)
+  };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, "game.js"), "utf8"), { window, document });
   frames.shift()(1000);
   buttons["control-left"].handlers.pointerdown({ pointerId: 1, preventDefault() {} });
@@ -53,6 +60,37 @@ test("browser entry point connects the on-screen controls to the game", () => {
   buttons["control-restart"].handlers.click();
   frames.shift()(1150);
   assert.equal(positions[3], positions[0]);
+
+  const pause = buttons["control-pause"];
+  pause.handlers.click();
+  frames.shift()(1200);
+  assert.equal(pause.attributes["aria-pressed"], "true");
+  assert.ok(messages.includes("PAUSADO"));
+
+  handlers.keydown({ key: "P", repeat: true });
+  assert.equal(pause.attributes["aria-pressed"], "true");
+  handlers.keydown({ key: "p", repeat: false });
+  assert.equal(pause.attributes["aria-pressed"], "false");
+
+  handlers.keydown({ key: "A" });
+  frames.shift()(1250);
+  assert.ok(positions[5] < positions[4]);
+  handlers.keyup({ key: "a" });
+  frames.shift()(1300);
+  assert.equal(positions[6], positions[5]);
+
+  let prevented = false;
+  handlers.keydown({
+    key: " ",
+    target: { closest: () => pause },
+    preventDefault() { prevented = true; },
+  });
+  assert.equal(prevented, false);
+
+  pause.handlers.click();
+  assert.equal(pause.attributes["aria-pressed"], "true");
+  buttons["control-restart"].handlers.click();
+  assert.equal(pause.attributes["aria-pressed"], "false");
 });
 
 test("player stays within the canvas bounds", () => {

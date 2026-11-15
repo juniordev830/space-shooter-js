@@ -154,15 +154,16 @@
     ctx.fillText("Score: " + engine.score, 12, 22);
     ctx.fillText("Lives: " + engine.lives, engine.width - 82, 22);
 
-    if (engine.gameOver) {
+    if (engine.gameOver || engine.paused) {
       ctx.fillStyle = "rgba(0, 0, 0, 0.72)";
       ctx.fillRect(0, 0, engine.width, engine.height);
       ctx.fillStyle = "#ffffff";
       ctx.textAlign = "center";
       ctx.font = "bold 30px sans-serif";
-      ctx.fillText("GAME OVER", engine.width / 2, engine.height / 2 - 12);
+      ctx.fillText(engine.gameOver ? "GAME OVER" : "PAUSADO", engine.width / 2, engine.height / 2 - 12);
       ctx.font = "16px sans-serif";
-      ctx.fillText("Pressione R para reiniciar", engine.width / 2, engine.height / 2 + 20);
+      ctx.fillText(engine.gameOver ? "R ou Reiniciar" : "P ou Pausa para continuar",
+        engine.width / 2, engine.height / 2 + 20);
       ctx.textAlign = "start";
     }
   }
@@ -191,15 +192,39 @@
     for (const name of Object.keys(pointers)) {
       attachPointerControl(document.getElementById(`control-${name}`), pointers[name]);
     }
+    const pause = document.getElementById("control-pause");
     const restart = document.getElementById("control-restart");
-    if (restart) restart.addEventListener("click", () => engine.reset());
+
+    function syncPauseButton() {
+      if (pause) pause.setAttribute("aria-pressed", String(engine.paused));
+    }
+
+    function togglePause() {
+      if (engine.gameOver) return;
+      engine.togglePaused();
+      syncPauseButton();
+    }
+
+    function resetGame() {
+      engine.reset();
+      syncPauseButton();
+    }
+
+    if (pause) pause.addEventListener("click", togglePause);
+    if (restart) restart.addEventListener("click", resetGame);
     window.addEventListener("keydown", event => {
-      if (["ArrowLeft", "ArrowRight", " "].includes(event.key)) event.preventDefault();
-      keys.add(event.key);
-      if (event.key.toLowerCase() === "r" && engine.gameOver) engine.reset();
-      if (event.key.toLowerCase() === "p") engine.togglePaused();
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      const key = event.key.toLowerCase();
+
+      // A focused button needs Space for its native keyboard activation.
+      if (key === " " && event.target?.closest?.("button")) return;
+
+      if (["arrowleft", "arrowright", " "].includes(key)) event.preventDefault();
+      keys.add(key);
+      if (key === "r" && engine.gameOver) resetGame();
+      if (key === "p" && !event.repeat) togglePause();
     });
-    window.addEventListener("keyup", event => keys.delete(event.key));
+    window.addEventListener("keyup", event => keys.delete(event.key.toLowerCase()));
     window.addEventListener("blur", () => {
       keys.clear();
       for (const active of Object.values(pointers)) active.clear();
@@ -211,8 +236,8 @@
       const delta = timestamp - previous;
       previous = timestamp;
       engine.update(delta, {
-        left: keys.has("ArrowLeft") || keys.has("a") || keys.has("A") || pointers.left.size > 0,
-        right: keys.has("ArrowRight") || keys.has("d") || keys.has("D") || pointers.right.size > 0,
+        left: keys.has("arrowleft") || keys.has("a") || pointers.left.size > 0,
+        right: keys.has("arrowright") || keys.has("d") || pointers.right.size > 0,
         shoot: keys.has(" ") || pointers.shoot.size > 0
       });
       drawGame(ctx, engine);

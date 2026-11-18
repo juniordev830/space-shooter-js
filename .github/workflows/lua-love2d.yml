@@ -1,0 +1,28 @@
+name: Lua Space Shooter CI
+on:
+  push:
+    paths:
+      - 'love2d/**'
+      - '.github/workflows/lua-love2d.yml'
+  pull_request:
+    paths:
+      - 'love2d/**'
+      - '.github/workflows/lua-love2d.yml'
+permissions:
+  contents: read
+jobs:
+  lua-engine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lua 5.4
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.4
+      - name: Lua syntax check
+        run: |
+          luac5.4 -p love2d/engine.lua
+          luac5.4 -p love2d/main.lua
+          luac5.4 -p love2d/test_engine.lua
+      - name: Test game rules without graphical LÖVE runtime
+        run: lua5.4 love2d/test_engine.lua

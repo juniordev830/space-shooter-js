@@ -128,6 +128,19 @@ test("shooting creates a bullet and respects cooldown", () => {
   assert.equal(game.bullets.length, 2);
 });
 
+test("enemy waves keep their cadence when frame times do not divide the interval", () => {
+  function simulate(frameMs) {
+    const game = new GameEngine({ height: 1200, random: () => 0 });
+    for (let elapsed = 0; elapsed < 8513; elapsed += frameMs) {
+      game.update(Math.min(frameMs, 8513 - elapsed));
+    }
+    return [game.enemies.length, game.spawnElapsed];
+  }
+
+  assert.deepEqual(simulate(16), [10, 13]);
+  assert.deepEqual(simulate(50), [10, 13]);
+});
+
 test("bullet and enemy collision awards points", () => {
   const game = new GameEngine({ random: () => 0.5 });
   game.bullets.push({ x: 100, y: 100, width: 4, height: 12, speed: 0 });

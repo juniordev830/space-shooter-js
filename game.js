@@ -48,10 +48,11 @@
 
     update(deltaMs, input = {}) {
       if (this.gameOver || this.paused) return;
-      const delta = Math.max(0, Math.min(Number(deltaMs) || 0, 50)) / 1000;
-      this.elapsed += delta * 1000;
-      this.spawnElapsed += delta * 1000;
-      this.fireCooldown = Math.max(0, this.fireCooldown - delta * 1000);
+      const elapsedMs = Math.max(0, Math.min(Number(deltaMs) || 0, 50));
+      const delta = elapsedMs / 1000;
+      this.elapsed += elapsedMs;
+      this.spawnElapsed += elapsedMs;
+      this.fireCooldown = Math.max(0, this.fireCooldown - elapsedMs);
 
       if (input.left) this.player.x -= this.player.speed * delta;
       if (input.right) this.player.x += this.player.speed * delta;
@@ -69,7 +70,7 @@
       }
 
       if (this.spawnElapsed >= 850) {
-        this.spawnElapsed = 0;
+        this.spawnElapsed -= 850;
         this.enemies.push({
           x: this.random() * (this.width - 30),
           y: -28,
